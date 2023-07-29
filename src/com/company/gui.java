@@ -31,7 +31,8 @@ public class gui {
         g.setColor(color);
         g.drawRect(x+250,-1*y+250,1,1);
     }
-    public void drawLine(int[] pointA, int[] pointB){
+    public void drawLine(int[] pointA, int[] pointB, Color c){
+        g.setColor(c);
         g.drawLine(pointA[0]+250, -1*pointA[1]+250,pointB[0]+250, -1*pointB[1]+250);
     }
     public void drawShadedTriangle(Triangle triangle){
@@ -48,5 +49,10 @@ public class gui {
                 putPixel(x,y,shadedColor);
             }
         }
+    }
+    public void drawWireframeTriangle(wireframeTriangle triangle){
+        drawLine(triangle.points[0], triangle.points[1], triangle.color);
+        drawLine(triangle.points[1], triangle.points[2], triangle.color);
+        drawLine(triangle.points[2], triangle.points[0], triangle.color);
     }
 }

@@ -7,15 +7,35 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Main {
-
+    private static double[] cameraPos = {0d, 0d, 0d};
+    private static final double canvasWidth = 500;
+    private static final double canvasHeight = 500;
+    private static final double distance = 1;
+    private static final double viewpointWidth = 1;
+    private static final double viewpointHeight = 1;
+    private static final double projection_plane_z = 1;
     public static void main(String[] args) {
 	    // write your code here
-        Triangle triangle = new Triangle(new double[][]{{-200,-250,0.3},{200,50,0.1},{20,250,1.0}}, Color.green);
+        ArrayList<renderable> objects = new ArrayList<>();
         gui g = new gui();
+        rectPrism rp = new rectPrism(
+                new double[][]{{1, 1, 1},{-1, 1, 1},{-1, -1, 1},{1, -1, 1},
+                {1, 1, -1},{-1,  1, -1},{-1,  -1, -1},{1, -1, -1}},
+                new Color[]{Color.red, Color.green, Color.blue, Color.yellow, Color.magenta, Color.cyan});
+        rp.translate(new double[]{-1.5,0,7});
+        objects.add(rp);
         while (true){
-            g.drawShadedTriangle(triangle);
+            for (renderable r : objects){
+                r.render(g);
+            }
             g.update();
         }
+    }
+    public static int[] viewportToCanvas(double[] point){
+        return new int[]{(int) Math.floor(((point[0]*canvasWidth)/viewpointWidth)), (int) Math.floor(((point[1]*canvasHeight)/viewpointHeight))};
+    }
+    public static int[] projectVertex(double[] point){
+        return viewportToCanvas(new double[]{point[0]*projection_plane_z/point[2], point[1]*projection_plane_z/point[2]});
     }
     public static double[] decomposeColor(Color A) {
         return new double[]{(double) A.getRed(), (double) A.getGreen(), (double) A.getBlue()};
@@ -74,5 +94,8 @@ public class Main {
         System.arraycopy(b, 0, result, aLen, bLen);
 
         return result;
+    }
+    public static double[] addVectors(double[] v1, double[] v2) {
+        return new double[]{v1[0] + v2[0], v1[1] + v2[1], v1[2]+v2[2]};
     }
 }
